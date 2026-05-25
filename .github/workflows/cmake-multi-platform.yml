@@ -4,6 +4,9 @@ jobs:
     test_build:
         name: Build impulse-cec program
         runs-on: ubuntu-latest
+        
+        permissions:
+          contents: write
 
         steps:
             - name: Checkout
@@ -16,6 +19,19 @@ jobs:
                 increment: 'patch'
                 scheme: 'semver'
 
+            # 👇 新增：配置并启用 GitHub Actions 缓存机制
+            - name: Cache Build Folder
+              uses: actions/cache@v4
+              with:
+                # 缓存你要编译的目标输出及中间体目录
+                path: rp2350/build
+                # 依据系统环境和 CMakeLists.txt 的 MD5 变化来动态生成/命中缓存键
+                key: ${{ runner.os }}-pico-build-${{ hashFiles('rp2350/CMakeLists.txt') }}
+                # 如果没找到精准匹配的键，就复用上一次最近的缓存，减少全量下载成本
+                restore-keys: |
+                  ${{ runner.os }}-pico-build-
+
+                  
             - name: Build-pico2
               id: build
               uses: elehobica/build-pico@v1

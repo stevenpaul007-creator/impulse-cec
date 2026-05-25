@@ -22,6 +22,7 @@ jobs:
               with:
                 platform: rp2350
                 board: pico2
+                path: rp2350
 
             - name: Create GitHub Release
               id: create_release

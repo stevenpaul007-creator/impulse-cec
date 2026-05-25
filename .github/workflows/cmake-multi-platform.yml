@@ -1,0 +1,50 @@
+name: cmake CI
+on: [push]
+jobs:
+    test_build:
+        name: Build impulse-cec program
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              
+            - name: Get next version
+              id: version_increment
+              uses: reecetech/version-increment@2024.10.1
+              with:
+                increment: 'patch'
+                scheme: 'semver'
+
+            - name: Build-pico2
+              id: build
+              uses: elehobica/build-pico@v1
+              with:
+                platform: rp2350
+                board: pico2
+
+            - name: Create GitHub Release
+              id: create_release
+              if: steps.version_increment.outputs.version
+              uses: actions/create-release@v1
+              with:
+                tag_name: v${{ steps.version_increment.outputs.version }}
+                release_name: Release v${{ steps.version_increment.outputs.version }}
+                body: New patch release triggered by push.
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            
+            - name: Upload pico2 UF2 to Release
+              if: steps.create_release.outputs.upload_url
+              uses: actions/upload-release-asset@v1
+              with:
+                upload_url: ${{ steps.create_release.outputs.upload_url }}
+                asset_path: rp2350/build/impulse-cec.uf2
+                asset_name: impulse-cec.uf2
+                asset_content_type: application/octet-stream
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+            

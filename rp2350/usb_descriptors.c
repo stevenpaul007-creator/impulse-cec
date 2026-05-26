@@ -33,8 +33,10 @@ tusb_desc_device_t const desc_device = {
     .bDeviceProtocol    = MISC_PROTOCOL_IAD,
 
     .bMaxPacketSize0    = CFG_TUD_ENDPOINT0_SIZE,
-    .idVendor           = 0x2E8A,  /* Raspberry Pi */
-    .idProduct          = 0x1000,  /* placeholder */
+//    .idVendor           = 0x2E8A,  /* Raspberry Pi */
+//    .idProduct          = 0x1000,  /* placeholder */
+    .idVendor           = 0x2548,  /* Pulse-Eight (原为 0x2E8A) */
+    .idProduct          = 0x1002,  /* CEC Adapter (原为 0x1000) */
     .bcdDevice          = 0x0100,
 
     .iManufacturer      = 0x01,

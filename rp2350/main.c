@@ -119,7 +119,7 @@ int main(void) {
         tud_task();
 
         /* Read CDC data from host and feed into P8 parser. */
-        if (tud_cdc_connected()) {
+        if (tud_cdc_available()) {   // in win, there is no dtr
             uint8_t buf[64];
             uint32_t n = tud_cdc_read(buf, sizeof(buf));
             for (uint32_t i = 0; i < n; i++) {
